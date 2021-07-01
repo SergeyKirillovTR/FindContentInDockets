@@ -32,36 +32,40 @@ public class FindContentInDockets {
         String path = args[0];
         String contentToFind = args[1];
 
-        List<String> contentInFiles = findContentInFiles(path, contentToFind);
-        for (String files : contentInFiles) {
-            System.out.println(files);
-        }
-        if (contentInFiles.isEmpty()) {
-            System.out.println("No content found: " + contentToFind);
-        }
+        findContentInFiles(path, contentToFind);
     }
 
-    private static List<String> findContentInFiles(String pathName, String contentToFind) {
-        List<String> fileNames = new ArrayList<String>();
-
+    private static void findContentInFiles(String pathName, String contentToFind) {
         File file = new File(pathName);
         File[] files = file.listFiles();
+        int foundedFilesQty = 0;
 
         if (files != null) {
             for (File gzipFile : files) {
                 if (findContent(gzipFile, contentToFind)) {
-                    fileNames.add(gzipFile.getName());
+                    System.out.println(gzipFile.getName());
+                    foundedFilesQty++;
                 }
             }
         }
-        return fileNames;
+
+        if (foundedFilesQty == 0) {
+            System.out.println("No content found: " + contentToFind);
+        }
     }
 
     private static boolean findContent(File file, String contentToFind) {
         String unzippedFile = unzipFile(file);
         String[] pages = extractContent(unzippedFile);
         for (String page : pages) {
-            String decodedPage = decodePage(page);
+            String decodedPage = "";
+
+            try {
+                decodedPage = decodePage(page);
+            } catch (IllegalArgumentException e) {
+                System.out.println(e.getMessage() + "In file: " + file.getName());
+            }
+
             if (decodedPage.toUpperCase().contains(contentToFind.toUpperCase())) {
                 return true;
             }

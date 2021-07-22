@@ -2,10 +2,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Arrays;
-
-import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 public class FindContentInDockets {
@@ -194,9 +191,7 @@ public class FindContentInDockets {
     }
 
     private static String[] extractContent(String unzippedFile) {
-        String content = unzippedFile.replaceAll("<docket .*>", "").replaceAll("</docket>", "")
-                .replaceAll("<page .*>", "").replaceAll("\\s", "");
-        return content.split("</page>");
+        return unzippedFile.split("<[\\s\\w\\n=\"./-]*>");
     }
 
     private static String unzipFile(File file) {

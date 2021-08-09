@@ -191,7 +191,7 @@ public class FindContentInDockets {
     }
 
     private static String[] extractContent(String unzippedFile) {
-        return unzippedFile.replaceAll("\n", "").split("<[\\s\\w=\"./-]*>");
+        return unzippedFile.replaceAll("\n", "").split("<[\\s\\w=\",./-]*>");
     }
 
     private static String unzipFile(File file) {

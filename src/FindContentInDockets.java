@@ -191,7 +191,12 @@ public class FindContentInDockets {
     }
 
     private static String[] extractContent(String unzippedFile) {
-        return unzippedFile.split("<[\\s\\w\\n=\"./-]*>");
+        String content = unzippedFile.replaceAll("\n", "")
+                .replaceAll("<docket .*?>", "")
+                .replaceAll("</docket>", "")
+                .replaceAll("<page .*?>", "")
+                .replaceAll("\\s", "");
+        return content.split("</page>");
     }
 
     private static String unzipFile(File file) {
